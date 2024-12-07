@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Locale;
 
@@ -21,10 +22,10 @@ public class DocxCheckerService {
         this.documentCheckers = documentCheckers;
     }
 
-    public List<String> checkDocxFile(MultipartFile file, Locale locale) {
+    public List<String> checkDocxFile(InputStream inputStream, Locale locale) {
         var errorsCollector = new ErrorsCollector.ListErrorsCollector();
 
-        try (var document = new XWPFDocument(file.getInputStream())) {
+        try (var document = new XWPFDocument(inputStream)) {
             for (var documentChecker : documentCheckers) {
                 try {
                     documentChecker.checkElement(document, errorsCollector);

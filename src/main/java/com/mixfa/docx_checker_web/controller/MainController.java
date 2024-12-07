@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
@@ -32,8 +33,8 @@ public class MainController {
     }
 
     @PostMapping("/check-file")
-    public String checkDocxReport(@RequestParam MultipartFile file, Model model) {
-        var errors = docxCheckerService.checkDocxFile(file, Locale.ENGLISH);
+    public String checkDocxReport(@RequestParam MultipartFile file, Model model) throws IOException {
+        var errors = docxCheckerService.checkDocxFile(file.getInputStream(), Locale.ENGLISH);
         model.addAttribute("errors", errors);
         return "templates :: errors-list";
     }
