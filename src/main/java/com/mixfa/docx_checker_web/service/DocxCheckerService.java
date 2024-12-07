@@ -35,6 +35,9 @@ public class DocxCheckerService {
         } catch (IOException e) {
             logger.error("IO exception reading file");
         }
+        catch (RuntimeException runtimeException) {
+          logger.error(runtimeException.getLocalizedMessage());
+        }
 
         return errorsCollector.getErrors()
                 .stream()

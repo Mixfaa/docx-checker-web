@@ -33,6 +33,7 @@
                     method="post"
                     enctype="multipart/form-data"
                     hx-post="/check-file"
+                    hx-trigger="submit"
                     hx-target="#file-list"
                     hx-swap="outerHTML"
                     class="needs-validation"
@@ -58,15 +59,39 @@
 
     <hr class="my-4">
 
-    <!-- Alerts for Success or Error -->
-    <div id="alert-container"></div>
 
     <h2 class="text-center mb-3">Found errors:</h2>
 
-    <div id="file-list" th:replace="~{templates :: errors-list}"></div>
+    <!-- Spinner (Bootstrap spinner) -->
+    <div id="spinner" class="spinner-container center" hidden>
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+
+    <div id="file-list-div">
+        <th:block id="file-list" th:replace="~{templates :: errors-list}"></th:block>
+    </div>
 
 </div>
 
+<script>
+    // Select the spinner element
+    const spinner = document.getElementById('spinner');
+    const fileList = document.getElementById("file-list-div")
+
+    // Show the spinner when a request starts
+    document.body.addEventListener('htmx:beforeRequest', function (event) {
+        fileList.hidden = true
+        spinner.hidden = false
+    });
+
+    // Hide the spinner when the request finishes
+    document.body.addEventListener('htmx:afterRequest', function (event) {
+        spinner.hidden = true
+        fileList.hidden = false
+    });
+</script>
 
 </body>
 </html>
