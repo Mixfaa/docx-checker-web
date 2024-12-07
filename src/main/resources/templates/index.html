@@ -16,6 +16,12 @@
 
 
 <div class="container mt-5">
+    <div>
+        <p>Implemented checkers</p>
+        <ul>
+            <li th:each="checker : ${checkers}" th:text="${checker}">Cheker name</li>
+        </ul>
+    </div>
     <h1 class="text-center mb-4">Upload DOCX File</h1>
 
     <!-- File Upload Form -->

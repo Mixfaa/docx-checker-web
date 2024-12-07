@@ -8,12 +8,11 @@ import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTFonts;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTInd;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTSpacing;
 import org.openxmlformats.schemas.wordprocessingml.x2006.main.CTStyle;
+import org.springframework.stereotype.Component;
 
 import java.math.BigInteger;
 
-/**
- * NOT Implemented
- */
+@Component
 public class NormalStyleChecker implements DocumentChecker {
     private static final String NO_NORMAL_STYLE = "nonormalstyle";
     private static final String WRONG_FONT = "wrongfont";
@@ -55,7 +54,6 @@ public class NormalStyleChecker implements DocumentChecker {
         boolean isFirstLineIndentCorrect = firstLineIndent == 35; // 1.25 cm in twips
         if (!isFirstLineIndentCorrect)
             errorsCollector.addError(WRONG_FIRST_LINE_INDENT);
-
 
     }
 }

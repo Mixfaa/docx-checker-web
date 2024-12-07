@@ -1,5 +1,6 @@
 package com.mixfa.docx_checker_web.controller;
 
+import com.mixfa.docx_checker_web.docxchecker.documentchecker.DocumentChecker;
 import com.mixfa.docx_checker_web.service.DocxCheckerService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,18 +9,25 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Locale;
 
 @Controller
 public class MainController {
     private final DocxCheckerService docxCheckerService;
+    private final List<String > documentCheckers;
 
-    public MainController(DocxCheckerService docxCheckerService) {
+    public MainController(DocxCheckerService docxCheckerService, List<DocumentChecker> documentCheckers) {
         this.docxCheckerService = docxCheckerService;
+        this.documentCheckers = documentCheckers
+                .stream()
+                .map(checker -> checker.getClass().getSimpleName())
+                .toList();
     }
 
     @GetMapping("/")
-    public String homePage() {
+    public String homePage(Model model) {
+        model.addAttribute("checkers", documentCheckers);
         return "index.html";
     }
 
