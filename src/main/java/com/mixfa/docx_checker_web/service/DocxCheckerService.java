@@ -1,12 +1,12 @@
 package com.mixfa.docx_checker_web.service;
 
+import com.mixfa.docx_checker_web.docxchecker.ElementChecker;
 import com.mixfa.docx_checker_web.docxchecker.ErrorsCollector;
-import com.mixfa.docx_checker_web.docxchecker.documentchecker.DocumentChecker;
+import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,29 +15,49 @@ import java.util.Locale;
 
 @Service
 public class DocxCheckerService {
-    private final List<DocumentChecker> documentCheckers;
+    private final List<ElementChecker<?>> checkers;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public DocxCheckerService(List<DocumentChecker> documentCheckers) {
-        this.documentCheckers = documentCheckers;
+    public DocxCheckerService(List<ElementChecker<?>> checkers) {
+        this.checkers = checkers;
     }
 
     public List<String> checkDocxFile(InputStream inputStream, Locale locale) {
         var errorsCollector = new ErrorsCollector.ListErrorsCollector();
 
         try (var document = new XWPFDocument(inputStream)) {
-            for (var documentChecker : documentCheckers) {
+            for (var checker : checkers) {
+                if (!checker.supports(document))
+                    continue;
+
                 try {
-                    documentChecker.checkElement(document, errorsCollector);
+                    @SuppressWarnings("unchecked")
+                    var castedChecker = (ElementChecker<XWPFDocument>) checker;
+                    castedChecker.checkElement(document, errorsCollector);
                 } catch (Exception ex) {
                     logger.error(ex.getLocalizedMessage());
                 }
             }
+
+            for (var bodyElement : document.getBodyElements()) {
+                for (var checker : checkers) {
+                    if (!checker.supports(bodyElement))
+                        continue;
+
+                    try {
+                        @SuppressWarnings("unchecked")
+                        var castedChecker = (ElementChecker<IBodyElement>) checker;
+                        castedChecker.checkElement(bodyElement, errorsCollector);
+                    } catch (Exception ex) {
+                        logger.error(ex.getLocalizedMessage());
+                    }
+                }
+
+            }
         } catch (IOException e) {
             logger.error("IO exception reading file");
-        }
-        catch (RuntimeException runtimeException) {
-          logger.error(runtimeException.getLocalizedMessage());
+        } catch (RuntimeException runtimeException) {
+            logger.error(runtimeException.getLocalizedMessage());
         }
 
         return errorsCollector.getErrors()

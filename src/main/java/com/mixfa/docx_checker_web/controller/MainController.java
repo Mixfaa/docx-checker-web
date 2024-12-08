@@ -1,5 +1,6 @@
 package com.mixfa.docx_checker_web.controller;
 
+import com.mixfa.docx_checker_web.docxchecker.ElementChecker;
 import com.mixfa.docx_checker_web.docxchecker.documentchecker.DocumentChecker;
 import com.mixfa.docx_checker_web.service.DocxCheckerService;
 import org.springframework.stereotype.Controller;
@@ -18,9 +19,9 @@ public class MainController {
     private final DocxCheckerService docxCheckerService;
     private final List<String> documentCheckers;
 
-    public MainController(DocxCheckerService docxCheckerService, List<DocumentChecker> documentCheckers) {
+    public MainController(DocxCheckerService docxCheckerService, List<ElementChecker<?>> checkers) {
         this.docxCheckerService = docxCheckerService;
-        this.documentCheckers = documentCheckers
+        this.documentCheckers = checkers
                 .stream()
                 .map(checker -> checker.getClass().getSimpleName())
                 .toList();
@@ -41,7 +42,7 @@ public class MainController {
                             Collectors.toMap(
                                     (k) -> k,
                                     (v) -> errors.stream().filter(err -> err.equals(v)).count(),
-                                    (k1, k2) -> k1
+                                    Math::max
                             )
                     )
                     .entrySet()

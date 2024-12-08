@@ -13,9 +13,7 @@ import java.util.Locale;
 public class DocxCheckerWebApplication {
 
 //    @Bean
-//    public CommandLineRunner runner(
-//            DocxCheckerService docxCheckerService
-//    ) {
+//    public CommandLineRunner runner(DocxCheckerService docxCheckerService) {
 //        return _ -> {
 //            try (var fis = new FileInputStream(
 //                    "C:\\Users\\mishu\\Desktop\\test_file.docx"
