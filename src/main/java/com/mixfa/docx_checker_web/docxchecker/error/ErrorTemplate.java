@@ -9,13 +9,14 @@ public record ErrorTemplate(
         Object[] args) {
     final static Locale defaultLocale = Locale.ENGLISH; // en
     final static String RESOURCE_NAME = "errors-resource";
+    final static ResourceBundle DEFAULT_RESOURCE_BUNDLE = ResourceBundle.getBundle(RESOURCE_NAME, defaultLocale);
 
     public String formatError(Locale locale) {
         ResourceBundle resourceBundle;
         try {
             resourceBundle = ResourceBundle.getBundle(RESOURCE_NAME, locale);
         } catch (MissingResourceException exception) {
-            resourceBundle = ResourceBundle.getBundle(RESOURCE_NAME, defaultLocale);
+            resourceBundle = DEFAULT_RESOURCE_BUNDLE;
         }
 
         return resourceBundle.getString(templateCode).formatted(args);
