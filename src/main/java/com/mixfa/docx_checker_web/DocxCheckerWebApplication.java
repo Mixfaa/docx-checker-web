@@ -15,11 +15,14 @@ public class DocxCheckerWebApplication {
     @Bean
     public CommandLineRunner runner(DocxCheckerService docxCheckerService) {
         return _ -> {
+
             try (var fis = new FileInputStream(
                     "C:\\Users\\mishu\\Desktop\\test_file.docx"
             )) {
                 for (String s : docxCheckerService.checkDocxFile(fis, Locale.ENGLISH))
                     System.out.println(s);
+            } catch (Throwable throwable) {
+                throwable.printStackTrace(System.err);
             }
         };
     }
