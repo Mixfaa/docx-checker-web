@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 public class PictureNumberChecker implements DocumentChecker {
     public static final String PICTURE_NUMBER_STYLE = "Picturenumber";
     public static final Predicate<String> pictureNumberPattern =
-            Pattern.compile("^Рисунок [1-9]\\d*(\\.[1-9]\\d*)?\\s{1,2}([–\\-])\\s{1,2}[А-ЯЇЄІҐ][^.]*\\.?$").asPredicate();
+            Pattern.compile("^Рисунок [1-9]\\d*(\\.[1-9]\\d*)?\\s{1,2}([–\\-])\\s{1,2}[А-ЯЇЄІҐ][^.]*\\.?").asPredicate();
 
     private static final String NO_PICTURE_NUMBER = "nopicturenumber";
     private static final String PICTURE_NUMBER_TEXT_ERR = "picturenumbertext";

@@ -1,6 +1,6 @@
 package com.mixfa.docx_checker_web.docxchecker.documentchecker;
 
-import com.mixfa.docx_checker_web.docxchecker.ElementChecker;
+import com.mixfa.docx_checker_web.docxchecker.DocxElementChecker;
 import com.mixfa.docx_checker_web.docxchecker.ErrorsCollector;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.springframework.stereotype.Component;
@@ -11,7 +11,7 @@ import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 @Component
-public class AddonsChecker implements ElementChecker<XWPFParagraph> {
+public class AddonsChecker implements DocxElementChecker<XWPFParagraph> {
     private final static Predicate<String> ADDON_CHAR_PATTERN = Pattern.compile("^(Додаток|ДОДАТОК) [АБВГДЕЖКЛМНПРСТУФХЦШЩЮ]").asPredicate();
 
     private static final List<String> ADDON_STYLES = List.of("Heading1", "1", "Heading1,1_Topic");

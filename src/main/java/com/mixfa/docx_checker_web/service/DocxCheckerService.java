@@ -1,6 +1,6 @@
 package com.mixfa.docx_checker_web.service;
 
-import com.mixfa.docx_checker_web.docxchecker.ElementChecker;
+import com.mixfa.docx_checker_web.docxchecker.DocxElementChecker;
 import com.mixfa.docx_checker_web.docxchecker.ErrorsCollector;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -15,10 +15,10 @@ import java.util.Locale;
 
 @Service
 public class DocxCheckerService {
-    private final List<ElementChecker<?>> checkers;
+    private final List<DocxElementChecker<?>> checkers;
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public DocxCheckerService(List<ElementChecker<?>> checkers) {
+    public DocxCheckerService(List<DocxElementChecker<?>> checkers) {
         this.checkers = checkers;
     }
 
@@ -32,7 +32,7 @@ public class DocxCheckerService {
 
                 try {
                     @SuppressWarnings("unchecked")
-                    var castedChecker = (ElementChecker<XWPFDocument>) checker;
+                    var castedChecker = (DocxElementChecker<XWPFDocument>) checker;
                     castedChecker.checkElement(document, errorsCollector);
                 } catch (Exception ex) {
                     logger.error(ex.getLocalizedMessage());
@@ -46,13 +46,12 @@ public class DocxCheckerService {
 
                     try {
                         @SuppressWarnings("unchecked")
-                        var castedChecker = (ElementChecker<IBodyElement>) checker;
+                        var castedChecker = (DocxElementChecker<IBodyElement>) checker;
                         castedChecker.checkElement(bodyElement, errorsCollector);
                     } catch (Exception ex) {
                         logger.error(ex.getLocalizedMessage());
                     }
                 }
-
             }
         } catch (IOException e) {
             logger.error("IO exception reading file");
