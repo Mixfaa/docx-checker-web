@@ -1,6 +1,6 @@
 package com.mixfa.docx_checker_web.docxchecker.documentchecker;
 
-import com.mixfa.docx_checker_web.docxchecker.ErrorsCollector;
+import com.mixfa.docx_checker_web.docxchecker.DocxCheckingContext;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +19,8 @@ public class DocumentMarginsChecker implements DocumentChecker {
     private final static String BOTTOM_MARGIN_INVALID = "bottommargininvalid";
 
     @Override
-    public void checkElement(XWPFDocument document, ErrorsCollector errorsCollector) {
+    public void checkElement(XWPFDocument document, DocxCheckingContext context) {
+        var errorsCollector = context.errorsCollector();
         var sectPtr = document.getDocument().getBody().getSectPr();
         if (sectPtr == null) {
             errorsCollector.addError(SECTPTR_NOT_FOUND);

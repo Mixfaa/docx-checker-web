@@ -1,5 +1,6 @@
 package com.mixfa.docx_checker_web.docxchecker.documentchecker;
 
+import com.mixfa.docx_checker_web.docxchecker.DocxCheckingContext;
 import com.mixfa.docx_checker_web.docxchecker.ErrorsCollector;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
@@ -14,7 +15,8 @@ public class NumericsStylesChecker implements DocumentChecker {
     private static final String MORE_THAN_ONE_NUMERIC_STYLE_USED = "morethanonenumstyleused";
 
     @Override
-    public void checkElement(XWPFDocument document, ErrorsCollector errorsCollector) {
+    public void checkElement(XWPFDocument document, DocxCheckingContext context) {
+        var errorsCollector = context.errorsCollector();
         var numericStylesUsage = new HashMap<>(NUMERICS_STYLES);
 
         for (XWPFParagraph paragraph : document.getParagraphs())

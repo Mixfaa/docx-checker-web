@@ -1,8 +1,9 @@
 package com.mixfa.docx_checker_web.docxchecker.documentchecker;
 
 
-import com.mixfa.docx_checker_web.docxchecker.ErrorsCollector;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import com.mixfa.docx_checker_web.docxchecker.DocxCheckingContext;
+import com.mixfa.docx_checker_web.docxchecker.DocxElementChecker;
+import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.springframework.stereotype.Component;
@@ -10,22 +11,24 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class IndentBeforePictureChecker implements DocumentChecker {
+public class IndentBeforePictureChecker implements DocxElementChecker.ParagraphChecker {
     private static final String NONL_BEFORE_PICTURE = "nonewlinebeforepicture";
 
     @Override
-    public void checkElement(XWPFDocument document, ErrorsCollector errorsCollector) {
-        List<XWPFParagraph> paragraphs = document.getParagraphs();
+    public void checkElement(XWPFParagraph paragraph, DocxCheckingContext context) {
+        var errorsCollector = context.errorsCollector();
+        var currentIndex = context.currentElementIndex();
+        if (currentIndex == 0) return;
 
-        for (int i = 1; i < paragraphs.size(); i++) {  // Start from index 1 to check previous paragraph
-            XWPFParagraph paragraph = paragraphs.get(i);
-            for (XWPFRun run : paragraph.getRuns()) {
-                if (run.getEmbeddedPictures().isEmpty())
-                    continue;
+        List<IBodyElement> elements = context.document().getBodyElements();
 
-                XWPFParagraph previousParagraph = paragraphs.get(i - 1);
+        for (XWPFRun run : paragraph.getRuns()) {
+            if (run.getEmbeddedPictures().isEmpty())
+                continue;
+
+            var previousElement = elements.get(currentIndex - 1);
+            if (previousElement instanceof XWPFParagraph previousParagraph) {
                 boolean isNewLineBeforePicture = isNewLineBeforePicture(previousParagraph);
-
                 if (!isNewLineBeforePicture) errorsCollector.addError(NONL_BEFORE_PICTURE);
             }
         }

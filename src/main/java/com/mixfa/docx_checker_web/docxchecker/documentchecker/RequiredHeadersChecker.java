@@ -1,5 +1,6 @@
 package com.mixfa.docx_checker_web.docxchecker.documentchecker;
 
+import com.mixfa.docx_checker_web.docxchecker.DocxCheckingContext;
 import com.mixfa.docx_checker_web.docxchecker.ErrorsCollector;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
@@ -16,7 +17,8 @@ public class RequiredHeadersChecker implements DocumentChecker {
     private static final Map<String, Integer> REQUIRED_HEADERS = Map.of("ЗМІСТ", 0, "ВСТУП", 0);
 
     @Override
-    public void checkElement(XWPFDocument document, ErrorsCollector errorsCollector) {
+    public void checkElement(XWPFDocument document, DocxCheckingContext context) {
+        var errorsCollector = context.errorsCollector();
         var headersCounter = new HashMap<>(REQUIRED_HEADERS);
 
         for (XWPFParagraph paragraph : document.getParagraphs()) {

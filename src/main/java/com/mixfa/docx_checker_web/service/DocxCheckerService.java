@@ -1,5 +1,6 @@
 package com.mixfa.docx_checker_web.service;
 
+import com.mixfa.docx_checker_web.docxchecker.DocxCheckingContext;
 import com.mixfa.docx_checker_web.docxchecker.DocxElementChecker;
 import com.mixfa.docx_checker_web.docxchecker.ErrorsCollector;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
@@ -23,31 +24,36 @@ public class DocxCheckerService {
     }
 
     public List<String> checkDocxFile(InputStream inputStream, Locale locale) {
-        var errorsCollector = new ErrorsCollector.ListErrorsCollector();
 
+        var startTime = System.nanoTime();
+        DocxCheckingContext.ModifiableContext context = null;
         try (var document = new XWPFDocument(inputStream)) {
+            context = new DocxCheckingContext.ModifiableContext(
+                    document,
+                    new ErrorsCollector.ListErrorsCollector()
+            );
             for (var checker : checkers) {
-                if (!checker.supports(document))
-                    continue;
+                if (!checker.supports(document)) continue;
 
                 try {
-                    @SuppressWarnings("unchecked")
-                    var castedChecker = (DocxElementChecker<XWPFDocument>) checker;
-                    castedChecker.checkElement(document, errorsCollector);
+                    @SuppressWarnings("unchecked") var castedChecker = (DocxElementChecker<XWPFDocument>) checker;
+                    castedChecker.checkElement(document, context);
                 } catch (Exception ex) {
                     logger.error(ex.getLocalizedMessage());
                 }
             }
 
-            for (var bodyElement : document.getBodyElements()) {
+            var bodyElements = document.getBodyElements();
+            for (int i = 0; i < bodyElements.size(); i++) {
+                var bodyElement = bodyElements.get(i);
+                context.setCurrentElementIndex(i);
+
                 for (var checker : checkers) {
-                    if (!checker.supports(bodyElement))
-                        continue;
+                    if (!checker.supports(bodyElement)) continue;
 
                     try {
-                        @SuppressWarnings("unchecked")
-                        var castedChecker = (DocxElementChecker<IBodyElement>) checker;
-                        castedChecker.checkElement(bodyElement, errorsCollector);
+                        @SuppressWarnings("unchecked") var castedChecker = (DocxElementChecker<IBodyElement>) checker;
+                        castedChecker.checkElement(bodyElement, context);
                     } catch (Exception ex) {
                         logger.error(ex.getLocalizedMessage());
                     }
@@ -59,9 +65,14 @@ public class DocxCheckerService {
             logger.error(runtimeException.getLocalizedMessage());
         }
 
-        return errorsCollector.getErrors()
-                .stream()
-                .map(errorTemplate -> errorTemplate.formatError(locale))
+        var delta = System.nanoTime() - startTime;
+
+        System.out.println("Benchmark: " + delta / 100000);
+        if (context == null) return List.of();
+
+        return context.errorsCollector()
+                .getErrors()
+                .stream().map(errorTemplate -> errorTemplate.formatError(locale))
                 .toList();
     }
 }

@@ -1,18 +1,18 @@
 package com.mixfa.docx_checker_web.docxchecker.documentchecker;
 
-import com.mixfa.docx_checker_web.docxchecker.ErrorsCollector;
+import com.mixfa.docx_checker_web.docxchecker.DocxCheckingContext;
+import com.mixfa.docx_checker_web.docxchecker.DocxElementChecker;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 @Component
-public class PictureNumberChecker implements DocumentChecker {
+public class PictureNumberChecker implements DocxElementChecker.ParagraphChecker {
     public static final String PICTURE_NUMBER_STYLE = "Picturenumber";
     public static final Predicate<String> pictureNumberPattern =
             Pattern.compile("^Рисунок [1-9]\\d*(\\.[1-9]\\d*)?\\s{1,2}([–\\-])\\s{1,2}[А-ЯЇЄІҐ][^.]*\\.?").asPredicate();
@@ -22,19 +22,19 @@ public class PictureNumberChecker implements DocumentChecker {
     private static final String NONL_AFTER_PICTURE_NUMBER = "nonewlineafterpicturenumber";
 
     @Override
-    public void checkElement(XWPFDocument document, ErrorsCollector errorsCollector) {
-        List<XWPFParagraph> paragraphs = document.getParagraphs();
+    public void checkElement(XWPFParagraph paragraph, DocxCheckingContext context) {
+        var errorsCollector = context.errorsCollector();
+        var currentIndex = context.currentElementIndex();
+        var bodyElements = context.document().getBodyElements();
+        if (bodyElements.size() <= currentIndex + 1)
+            return;
 
-        for (int i = 0; i < paragraphs.size(); i++) {
-            XWPFParagraph paragraph = paragraphs.get(i);
-            for (XWPFRun run : paragraph.getRuns()) {
-                if (run.getEmbeddedPictures().isEmpty())
-                    continue;
+        for (XWPFRun run : paragraph.getRuns()) {
+            if (run.getEmbeddedPictures().isEmpty())
+                continue;
 
-                if (paragraphs.size() <= i + 1)
-                    continue;
-
-                XWPFParagraph nextParagraph = paragraphs.get(i + 1);
+            IBodyElement nextElement = bodyElements.get(currentIndex + 1);
+            if (nextElement instanceof XWPFParagraph nextParagraph) {
                 boolean styledAsPictureNumber = StringUtils.equals(nextParagraph.getStyle(), PICTURE_NUMBER_STYLE);
 
                 if (!styledAsPictureNumber) {
@@ -45,14 +45,18 @@ public class PictureNumberChecker implements DocumentChecker {
                 if (!pictureNumberPattern.test(nextParagraph.getText()))
                     errorsCollector.addError(PICTURE_NUMBER_TEXT_ERR, nextParagraph.getText());
 
-                if (paragraphs.size() >= i + 2)
+                if (bodyElements.size() <= currentIndex + 2)
                     continue;
 
-                XWPFParagraph afterPictureNumberParagraph = paragraphs.get(i + 2);
-
-                if (!StringUtils.isBlank(afterPictureNumberParagraph.getText()))
+                IBodyElement afterPictureNumberElement = bodyElements.get(currentIndex + 2);
+                if (afterPictureNumberElement instanceof XWPFParagraph afterPictureNumberParagraph) {
+                    if (!StringUtils.isBlank(afterPictureNumberParagraph.getText()))
+                        errorsCollector.addError(NONL_AFTER_PICTURE_NUMBER, nextParagraph.getText());
+                } else
                     errorsCollector.addError(NONL_AFTER_PICTURE_NUMBER, nextParagraph.getText());
-            }
+            } else
+                errorsCollector.addError(NO_PICTURE_NUMBER);
         }
+
     }
 }

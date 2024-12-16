@@ -1,5 +1,6 @@
 package com.mixfa.docx_checker_web.docxchecker.documentchecker;
 
+import com.mixfa.docx_checker_web.docxchecker.DocxCheckingContext;
 import com.mixfa.docx_checker_web.docxchecker.ErrorsCollector;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -20,7 +21,8 @@ public class NormalStyleChecker implements DocumentChecker {
     private static final String WRONG_FIRST_LINE_INDENT = "wrongindent";
 
     @Override
-    public void checkElement(XWPFDocument document, ErrorsCollector errorsCollector) {
+    public void checkElement(XWPFDocument document, DocxCheckingContext context) {
+        var errorsCollector = context.errorsCollector();
         XWPFStyle style = document.getStyles().getStyle("Normal");
 
         if (style == null) {

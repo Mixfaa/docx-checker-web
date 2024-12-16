@@ -1,7 +1,7 @@
 package com.mixfa.docx_checker_web.docxchecker.documentchecker;
 
+import com.mixfa.docx_checker_web.docxchecker.DocxCheckingContext;
 import com.mixfa.docx_checker_web.docxchecker.DocxElementChecker;
-import com.mixfa.docx_checker_web.docxchecker.ErrorsCollector;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.util.StringUtils;
@@ -20,9 +20,10 @@ public class AddonsChecker implements DocxElementChecker<XWPFParagraph> {
     private static final String ADDON_STYLE_NOT_MATCHES = "addonstyleinvalid";
 
     @Override
-    public void checkElement(XWPFParagraph paragraph, ErrorsCollector errorsCollector) {
-        var paragraphTextLC = paragraph.getText().toLowerCase();
+    public void checkElement(XWPFParagraph paragraph, DocxCheckingContext context) {
+        var errorsCollector = context.errorsCollector();
         var paragraphText = paragraph.getText();
+        var paragraphTextLC = paragraphText.toLowerCase();
         if (!paragraphTextLC.startsWith("додаток")) return;
 
         if (!ADDON_CHAR_PATTERN.test(paragraphText)) errorsCollector.addError(ADDON_TITLE_NOT_MATCHES, paragraphText);
@@ -37,3 +38,4 @@ public class AddonsChecker implements DocxElementChecker<XWPFParagraph> {
         return XWPFParagraph.class;
     }
 }
+
