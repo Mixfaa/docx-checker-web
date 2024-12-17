@@ -34,29 +34,32 @@ public class PictureNumberChecker implements DocxElementChecker.ParagraphChecker
                 continue;
 
             IBodyElement nextElement = bodyElements.get(currentIndex + 1);
-            if (nextElement instanceof XWPFParagraph nextParagraph) {
-                boolean styledAsPictureNumber = StringUtils.equals(nextParagraph.getStyle(), PICTURE_NUMBER_STYLE);
-
-                if (!styledAsPictureNumber) {
-                    errorsCollector.addError(NO_PICTURE_NUMBER);
-                    continue;
-                }
-
-                if (!PICTURE_NUMBER_PATTERN.test(nextParagraph.getText()))
-                    errorsCollector.addError(PICTURE_NUMBER_TEXT_ERR, nextParagraph.getText());
-
-                if (bodyElements.size() <= currentIndex + 2)
-                    continue;
-
-                IBodyElement afterPictureNumberElement = bodyElements.get(currentIndex + 2);
-                if (afterPictureNumberElement instanceof XWPFParagraph afterPictureNumberParagraph) {
-                    if (!StringUtils.isBlank(afterPictureNumberParagraph.getText()))
-                        errorsCollector.addError(NONL_AFTER_PICTURE_NUMBER, nextParagraph.getText());
-                } else
-                    errorsCollector.addError(NONL_AFTER_PICTURE_NUMBER, nextParagraph.getText());
-            } else
+            if (!(nextElement instanceof XWPFParagraph nextParagraph)) {
                 errorsCollector.addError(NO_PICTURE_NUMBER);
-        }
+                continue;
+            }
 
+            boolean styledAsPictureNumber = StringUtils.equals(nextParagraph.getStyle(), PICTURE_NUMBER_STYLE);
+
+            if (!styledAsPictureNumber) {
+                errorsCollector.addError(NO_PICTURE_NUMBER);
+                continue;
+            }
+
+            if (!PICTURE_NUMBER_PATTERN.test(nextParagraph.getText()))
+                errorsCollector.addError(PICTURE_NUMBER_TEXT_ERR, nextParagraph.getText());
+
+            if (bodyElements.size() <= currentIndex + 2)
+                continue;
+
+            IBodyElement afterPictureNumberElement = bodyElements.get(currentIndex + 2);
+            if (!(afterPictureNumberElement instanceof XWPFParagraph afterPictureNumberParagraph)) {
+                errorsCollector.addError(NONL_AFTER_PICTURE_NUMBER, nextParagraph.getText());
+                continue;
+            }
+
+            if (!StringUtils.isBlank(afterPictureNumberParagraph.getText()))
+                errorsCollector.addError(NONL_AFTER_PICTURE_NUMBER, nextParagraph.getText());
+        }
     }
 }
