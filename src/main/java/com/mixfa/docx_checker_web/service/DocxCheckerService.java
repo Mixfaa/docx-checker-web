@@ -65,7 +65,6 @@ public class DocxCheckerService {
         }
 
         if (context == null) return List.of();
-
         return context.errorsCollector().getErrors();
     }
 
