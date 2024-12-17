@@ -21,11 +21,11 @@ public class AddonsChecker implements DocxElementChecker<XWPFParagraph> {
 
     @Override
     public void checkElement(XWPFParagraph paragraph, DocxCheckingContext context) {
-        var errorsCollector = context.errorsCollector();
         var paragraphText = paragraph.getText();
         var paragraphTextLC = paragraphText.toLowerCase();
         if (!paragraphTextLC.startsWith("додаток")) return;
 
+        var errorsCollector = context.errorsCollector();
         if (!ADDON_CHAR_PATTERN.test(paragraphText)) errorsCollector.addError(ADDON_TITLE_NOT_MATCHES, paragraphText);
 
         var paragraphStyle = paragraph.getStyle();

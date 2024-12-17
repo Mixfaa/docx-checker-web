@@ -33,5 +33,4 @@ public interface DocxElementChecker<T> {
             return XWPFDocument.class;
         }
     }
-
 }

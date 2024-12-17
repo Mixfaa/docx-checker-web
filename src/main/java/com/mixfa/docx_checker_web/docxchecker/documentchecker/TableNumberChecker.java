@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 @Component
 public class TableNumberChecker implements DocxElementChecker.BodyElementChecker {
     public static final String TABLE_NUMBER_STYLE = "Tablenumber";
-    public static final Predicate<String> tableNumberPattern =
+    public static final Predicate<String> TABLE_NUMBER_PATTERN =
             Pattern.compile("Таблиця \\d\\.\\d{1,3} – [A-ZА-ЯЄІЇ].+")
                     .asPredicate();
 
@@ -38,7 +38,7 @@ public class TableNumberChecker implements DocxElementChecker.BodyElementChecker
             if (!StringUtils.equals(prevParagraph.getStyle(), TABLE_NUMBER_STYLE))
                 errorsCollector.addError(NO_TABLE_NUM_BEFORE_TABLE);
 
-            if (!tableNumberPattern.test(prevParagraph.getText()))
+            if (!TABLE_NUMBER_PATTERN.test(prevParagraph.getText()))
                 errorsCollector.addError(TABLE_NUM_PATTERN_ERR, prevParagraph.getText());
 
             var prevprevElement = elements.get(currentIndex - 2);

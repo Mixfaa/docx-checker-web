@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 @Component
 public class PictureNumberChecker implements DocxElementChecker.ParagraphChecker {
     public static final String PICTURE_NUMBER_STYLE = "Picturenumber";
-    public static final Predicate<String> pictureNumberPattern =
+    public static final Predicate<String> PICTURE_NUMBER_PATTERN =
             Pattern.compile("^Рисунок [1-9]\\d*(\\.[1-9]\\d*)?\\s{1,2}([–\\-])\\s{1,2}[А-ЯЇЄІҐ][^.]*\\.?").asPredicate();
 
     private static final String NO_PICTURE_NUMBER = "nopicturenumber";
@@ -42,7 +42,7 @@ public class PictureNumberChecker implements DocxElementChecker.ParagraphChecker
                     continue;
                 }
 
-                if (!pictureNumberPattern.test(nextParagraph.getText()))
+                if (!PICTURE_NUMBER_PATTERN.test(nextParagraph.getText()))
                     errorsCollector.addError(PICTURE_NUMBER_TEXT_ERR, nextParagraph.getText());
 
                 if (bodyElements.size() <= currentIndex + 2)

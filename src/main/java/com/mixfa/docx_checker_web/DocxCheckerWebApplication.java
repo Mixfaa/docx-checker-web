@@ -8,6 +8,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 import java.io.FileInputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Locale;
 
 @SpringBootApplication
@@ -16,14 +18,11 @@ public class DocxCheckerWebApplication {
     @Bean
     public CommandLineRunner runner(DocxCheckerService docxCheckerService) {
         return _ -> {
-
-            try (var fis = new FileInputStream(
-                    "C:\\Users\\mishu\\Desktop\\test_file.docx"
-            )) {
+            var file = Path.of("C:\\Users\\mishu\\Desktop\\test_file.docx").toFile();
+            if (!file.exists()) return;
+            try (var fis = new FileInputStream(file)) {
                 for (ErrorTemplate t : docxCheckerService.checkDocxFile(fis))
                     System.out.println(t.formatError(Locale.ENGLISH));
-            } catch (Throwable throwable) {
-                throwable.printStackTrace(System.err);
             }
         };
     }
