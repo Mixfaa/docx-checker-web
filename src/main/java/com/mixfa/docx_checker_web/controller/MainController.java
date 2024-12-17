@@ -35,7 +35,10 @@ public class MainController {
     @PostMapping("/check-file")
     public String checkDocxReport(@RequestParam MultipartFile file, Model model) {
         try {
-            var errors = docxCheckerService.checkDocxFile(file.getInputStream(), Locale.ENGLISH);
+            var errors = docxCheckerService.checkDocxFile(file.getInputStream())
+                    .stream()
+                    .map(et -> et.formatError(Locale.ENGLISH))
+                    .toList();
             var errorsEnhanced = errors.stream()
                     .collect(
                             Collectors.toMap(

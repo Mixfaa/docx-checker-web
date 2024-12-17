@@ -17,7 +17,7 @@ public class IndentBeforePictureChecker implements DocxElementChecker.ParagraphC
     @Override
     public void checkElement(XWPFParagraph paragraph, DocxCheckingContext context) {
         var errorsCollector = context.errorsCollector();
-        var currentIndex = context.currentElementIndex();
+        var currentIndex = context.elementIndex();
         if (currentIndex == 0) return;
 
         List<IBodyElement> elements = context.document().getBodyElements();

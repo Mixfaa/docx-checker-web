@@ -3,6 +3,7 @@ package com.mixfa.docx_checker_web.service;
 import com.mixfa.docx_checker_web.docxchecker.DocxCheckingContext;
 import com.mixfa.docx_checker_web.docxchecker.DocxElementChecker;
 import com.mixfa.docx_checker_web.docxchecker.ErrorsCollector;
+import com.mixfa.docx_checker_web.docxchecker.error.ErrorTemplate;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.slf4j.Logger;
@@ -11,8 +12,8 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.List;
-import java.util.Locale;
 
 @Service
 public class DocxCheckerService {
@@ -23,12 +24,10 @@ public class DocxCheckerService {
         this.checkers = checkers;
     }
 
-    public List<String> checkDocxFile(InputStream inputStream, Locale locale) {
-
-        var startTime = System.nanoTime();
-        DocxCheckingContext.ModifiableContext context = null;
+    public Collection<ErrorTemplate> checkDocxFile(InputStream inputStream) {
+        ModifiableContext context = null;
         try (var document = new XWPFDocument(inputStream)) {
-            context = new DocxCheckingContext.ModifiableContext(
+            context = new ModifiableContext(
                     document,
                     new ErrorsCollector.ListErrorsCollector()
             );
@@ -65,14 +64,38 @@ public class DocxCheckerService {
             logger.error(runtimeException.getLocalizedMessage());
         }
 
-        var delta = System.nanoTime() - startTime;
-
-        System.out.println("Benchmark: " + delta / 100000);
         if (context == null) return List.of();
 
-        return context.errorsCollector()
-                .getErrors()
-                .stream().map(errorTemplate -> errorTemplate.formatError(locale))
-                .toList();
+        return context.errorsCollector().getErrors();
+    }
+
+    private static class ModifiableContext implements DocxCheckingContext {
+        private final XWPFDocument document;
+        private final ErrorsCollector errorsCollector;
+        private int currentElementIndex = 0;
+
+        public ModifiableContext(XWPFDocument document, ErrorsCollector errorsCollector) {
+            this.document = document;
+            this.errorsCollector = errorsCollector;
+        }
+
+        public void setCurrentElementIndex(int currentElementIndex) {
+            this.currentElementIndex = currentElementIndex;
+        }
+
+        @Override
+        public ErrorsCollector errorsCollector() {
+            return errorsCollector;
+        }
+
+        @Override
+        public int elementIndex() {
+            return currentElementIndex;
+        }
+
+        @Override
+        public XWPFDocument document() {
+            return document;
+        }
     }
 }

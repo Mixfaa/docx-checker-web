@@ -1,6 +1,7 @@
 package com.mixfa.docx_checker_web.docxchecker.documentchecker;
 
 import com.mixfa.docx_checker_web.docxchecker.DocxCheckingContext;
+import com.mixfa.docx_checker_web.docxchecker.DocxElementChecker;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.springframework.stereotype.Component;
 
@@ -10,7 +11,7 @@ import java.util.Objects;
 import static com.mixfa.docx_checker_web.misc.Utils.smToTwips;
 
 @Component
-public class DocumentMarginsChecker implements DocumentChecker {
+public class DocumentMarginsChecker implements DocxElementChecker.DocumentChecker {
     private final static String SECTPTR_NOT_FOUND = "sectptrnf";
     private final static String MARGINS_NOT_FOUND = "marginsnotfound";
     private final static String LEFT_MARGIN_INVALID = "leftmargininvdalid";

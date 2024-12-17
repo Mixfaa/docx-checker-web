@@ -24,7 +24,7 @@ public class PictureNumberChecker implements DocxElementChecker.ParagraphChecker
     @Override
     public void checkElement(XWPFParagraph paragraph, DocxCheckingContext context) {
         var errorsCollector = context.errorsCollector();
-        var currentIndex = context.currentElementIndex();
+        var currentIndex = context.elementIndex();
         var bodyElements = context.document().getBodyElements();
         if (bodyElements.size() <= currentIndex + 1)
             return;

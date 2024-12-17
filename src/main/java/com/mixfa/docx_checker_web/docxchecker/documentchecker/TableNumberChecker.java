@@ -25,7 +25,7 @@ public class TableNumberChecker implements DocxElementChecker.BodyElementChecker
 
     @Override
     public void checkElement(IBodyElement element, DocxCheckingContext context) {
-        var currentIndex = context.currentElementIndex();
+        var currentIndex = context.elementIndex();
         if (currentIndex < 2) return;
 
         var errorsCollector = context.errorsCollector();
@@ -47,10 +47,5 @@ public class TableNumberChecker implements DocxElementChecker.BodyElementChecker
                     errorsCollector.addError(NONL_BEFORE_TABLE_NUM);
             }
         }
-    }
-
-    @Override
-    public Class<IBodyElement> targetElementType() {
-        return IBodyElement.class;
     }
 }

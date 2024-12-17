@@ -1,7 +1,7 @@
 package com.mixfa.docx_checker_web.docxchecker.documentchecker;
 
 import com.mixfa.docx_checker_web.docxchecker.DocxCheckingContext;
-import com.mixfa.docx_checker_web.docxchecker.ErrorsCollector;
+import com.mixfa.docx_checker_web.docxchecker.DocxElementChecker;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFStyle;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import java.math.BigInteger;
 
 @Component
-public class NormalStyleChecker implements DocumentChecker {
+public class NormalStyleChecker implements DocxElementChecker.DocumentChecker {
     private static final String NO_NORMAL_STYLE = "nonormalstyle";
     private static final String WRONG_FONT = "wrongfont";
     private static final String WRONG_SPACING = "wrongspacing";

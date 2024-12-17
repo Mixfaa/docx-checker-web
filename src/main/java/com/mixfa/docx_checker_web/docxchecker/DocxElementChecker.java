@@ -1,6 +1,7 @@
 package com.mixfa.docx_checker_web.docxchecker;
 
 import org.apache.poi.xwpf.usermodel.IBodyElement;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 
 public interface DocxElementChecker<T> {
@@ -18,10 +19,19 @@ public interface DocxElementChecker<T> {
             return XWPFParagraph.class;
         }
     }
+
     interface BodyElementChecker extends DocxElementChecker<IBodyElement> {
         @Override
         default Class<IBodyElement> targetElementType() {
             return IBodyElement.class;
         }
     }
+
+    interface DocumentChecker extends DocxElementChecker<XWPFDocument> {
+        @Override
+        default Class<XWPFDocument> targetElementType() {
+            return XWPFDocument.class;
+        }
+    }
+
 }

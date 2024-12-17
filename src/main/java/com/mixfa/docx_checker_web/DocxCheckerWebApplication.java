@@ -1,5 +1,6 @@
 package com.mixfa.docx_checker_web;
 
+import com.mixfa.docx_checker_web.docxchecker.error.ErrorTemplate;
 import com.mixfa.docx_checker_web.service.DocxCheckerService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -19,8 +20,8 @@ public class DocxCheckerWebApplication {
             try (var fis = new FileInputStream(
                     "C:\\Users\\mishu\\Desktop\\test_file.docx"
             )) {
-                for (String s : docxCheckerService.checkDocxFile(fis, Locale.ENGLISH))
-                    System.out.println(s);
+                for (ErrorTemplate t : docxCheckerService.checkDocxFile(fis))
+                    System.out.println(t.formatError(Locale.ENGLISH));
             } catch (Throwable throwable) {
                 throwable.printStackTrace(System.err);
             }

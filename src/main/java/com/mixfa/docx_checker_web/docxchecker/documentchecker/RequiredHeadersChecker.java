@@ -1,7 +1,7 @@
 package com.mixfa.docx_checker_web.docxchecker.documentchecker;
 
 import com.mixfa.docx_checker_web.docxchecker.DocxCheckingContext;
-import com.mixfa.docx_checker_web.docxchecker.ErrorsCollector;
+import com.mixfa.docx_checker_web.docxchecker.DocxElementChecker;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.springframework.stereotype.Component;
@@ -11,10 +11,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class RequiredHeadersChecker implements DocumentChecker {
+public class RequiredHeadersChecker implements DocxElementChecker.DocumentChecker {
     private static final String HEADER_STYLE = "Headerofreportpart";
     private static final String REQUIRED_HEADER_NOT_FOUND = "reqheadernotfound";
-    private static final Map<String, Integer> REQUIRED_HEADERS = Map.of("ЗМІСТ", 0, "ВСТУП", 0);
+    private static final Map<String, Boolean> REQUIRED_HEADERS = Map.of("ЗМІСТ", false, "ВСТУП", false);
 
     @Override
     public void checkElement(XWPFDocument document, DocxCheckingContext context) {
@@ -25,12 +25,11 @@ public class RequiredHeadersChecker implements DocumentChecker {
             if (!StringUtils.equals(paragraph.getStyle(), HEADER_STYLE))
                 continue;
 
-            headersCounter.computeIfPresent(paragraph.getText(), (k, v) -> v + 1);
+            headersCounter.computeIfPresent(paragraph.getText(), (_, _) -> true);
         }
 
-        headersCounter.forEach((header, count) -> {
-            if (count != 0) return;
-
+        headersCounter.forEach((header, used) -> {
+            if (used) return;
             errorsCollector.addError(REQUIRED_HEADER_NOT_FOUND, header);
         });
     }
