@@ -4,6 +4,7 @@ import com.mixfa.docx_checker_web.docxchecker.error.ErrorTemplate;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public interface ErrorsCollector {
@@ -25,7 +26,7 @@ public interface ErrorsCollector {
 
         @Override
         public Collection<ErrorTemplate> getErrors() {
-            return errors;
+            return Collections.unmodifiableList(errors);
         }
     }
 }

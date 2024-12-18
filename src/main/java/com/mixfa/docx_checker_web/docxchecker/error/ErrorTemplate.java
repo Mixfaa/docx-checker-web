@@ -12,6 +12,9 @@ public record ErrorTemplate(
     final static ResourceBundle DEFAULT_RESOURCE_BUNDLE = ResourceBundle.getBundle(RESOURCE_NAME, defaultLocale);
 
     public String formatError(Locale locale) {
+        if (locale.equals(defaultLocale))
+            return DEFAULT_RESOURCE_BUNDLE.getString(templateCode).formatted(args);
+
         ResourceBundle resourceBundle;
         try {
             resourceBundle = ResourceBundle.getBundle(RESOURCE_NAME, locale);
