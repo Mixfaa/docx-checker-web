@@ -14,7 +14,6 @@ import java.util.Locale;
 
 @SpringBootApplication
 public class DocxCheckerWebApplication {
-
     @Bean
     public CommandLineRunner runner(DocxCheckerService docxCheckerService) {
         return _ -> {
