@@ -1,6 +1,6 @@
 package com.mixfa.docx_checker_web;
 
-import com.mixfa.docx_checker_web.docxchecker.error.ErrorTemplate;
+import com.mixfa.docx_checker_web.docxchecker.model.ErrorTemplate;
 import com.mixfa.docx_checker_web.service.DocxCheckerService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Bean;
 
 import java.io.FileInputStream;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Locale;
 
 @SpringBootApplication

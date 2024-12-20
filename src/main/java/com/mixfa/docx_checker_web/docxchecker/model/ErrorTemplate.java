@@ -1,4 +1,4 @@
-package com.mixfa.docx_checker_web.docxchecker.error;
+package com.mixfa.docx_checker_web.docxchecker.model;
 
 import java.util.Locale;
 import java.util.MissingResourceException;

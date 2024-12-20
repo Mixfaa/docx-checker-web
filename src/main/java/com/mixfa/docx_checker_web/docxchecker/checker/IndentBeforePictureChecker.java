@@ -1,4 +1,4 @@
-package com.mixfa.docx_checker_web.docxchecker.documentchecker;
+package com.mixfa.docx_checker_web.docxchecker.checker;
 
 
 import com.mixfa.docx_checker_web.docxchecker.DocxCheckingContext;

@@ -1,6 +1,6 @@
 package com.mixfa.docx_checker_web.docxchecker;
 
-import com.mixfa.docx_checker_web.docxchecker.error.ErrorTemplate;
+import com.mixfa.docx_checker_web.docxchecker.model.ErrorTemplate;
 
 import java.util.ArrayList;
 import java.util.Collection;
