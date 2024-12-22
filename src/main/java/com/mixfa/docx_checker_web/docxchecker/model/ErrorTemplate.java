@@ -18,6 +18,8 @@ public record ErrorTemplate(
         ResourceBundle resourceBundle;
         try {
             resourceBundle = ResourceBundle.getBundle(RESOURCE_NAME, locale);
+            if (!resourceBundle.containsKey(templateCode))
+                resourceBundle = DEFAULT_RESOURCE_BUNDLE;
         } catch (MissingResourceException exception) {
             resourceBundle = DEFAULT_RESOURCE_BUNDLE;
         }

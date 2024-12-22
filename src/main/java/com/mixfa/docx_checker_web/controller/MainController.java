@@ -2,9 +2,11 @@ package com.mixfa.docx_checker_web.controller;
 
 import com.mixfa.docx_checker_web.docxchecker.DocxElementChecker;
 import com.mixfa.docx_checker_web.service.DocxCheckerService;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,11 +35,11 @@ public class MainController {
     }
 
     @PostMapping("/check-file")
-    public String checkDocxReport(@RequestParam MultipartFile file, Model model) {
+    public String checkDocxReport(@RequestParam MultipartFile file, @RequestParam String locale, Model model) {
         try {
             var errors = docxCheckerService.checkDocxFile(file.getInputStream())
                     .stream()
-                    .map(et -> et.formatError(Locale.ENGLISH))
+                    .map(et -> et.formatError(Locale.forLanguageTag(locale)))
                     .toList();
             var errorsEnhanced = errors.stream()
                     .collect(
