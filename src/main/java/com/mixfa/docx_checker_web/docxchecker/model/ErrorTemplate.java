@@ -2,6 +2,7 @@ package com.mixfa.docx_checker_web.docxchecker.model;
 
 import java.util.Locale;
 import java.util.MissingResourceException;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public record ErrorTemplate(
@@ -12,6 +13,7 @@ public record ErrorTemplate(
     final static ResourceBundle DEFAULT_RESOURCE_BUNDLE = ResourceBundle.getBundle(RESOURCE_NAME, defaultLocale);
 
     public String formatError(Locale locale) {
+        locale = Objects.requireNonNullElse(locale, defaultLocale);
         if (locale.equals(defaultLocale))
             return DEFAULT_RESOURCE_BUNDLE.getString(templateCode).formatted(args);
 
