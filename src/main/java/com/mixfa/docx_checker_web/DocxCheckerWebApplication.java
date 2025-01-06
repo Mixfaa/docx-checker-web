@@ -1,7 +1,7 @@
 package com.mixfa.docx_checker_web;
 
 import com.mixfa.docx_checker_web.docxchecker.model.ErrorTemplate;
-import com.mixfa.docx_checker_web.service.DocxCheckerService;
+import com.mixfa.docx_checker_web.service.impl.SyncDocxCheckerServiceImpl;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -14,7 +14,7 @@ import java.util.Locale;
 @SpringBootApplication
 public class DocxCheckerWebApplication {
     @Bean
-    public CommandLineRunner runner(DocxCheckerService docxCheckerService) {
+    public CommandLineRunner runner(SyncDocxCheckerServiceImpl docxCheckerService) {
         return _ -> {
             var file = Path.of("C:\\Users\\mishu\\Desktop\\test_file.docx").toFile();
             if (!file.exists()) return;

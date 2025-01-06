@@ -2,11 +2,10 @@ package com.mixfa.docx_checker_web.controller;
 
 import com.mixfa.docx_checker_web.docxchecker.DocxElementChecker;
 import com.mixfa.docx_checker_web.service.DocxCheckerService;
-import org.springframework.cglib.core.Local;
+import com.mixfa.docx_checker_web.service.impl.SyncDocxCheckerServiceImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,7 +19,7 @@ public class MainController {
     private final DocxCheckerService docxCheckerService;
     private final List<String> documentCheckers;
 
-    public MainController(DocxCheckerService docxCheckerService, List<DocxElementChecker<?>> checkers) {
+    public MainController(SyncDocxCheckerServiceImpl docxCheckerService, List<DocxElementChecker<?>> checkers) {
         this.docxCheckerService = docxCheckerService;
         this.documentCheckers = checkers
                 .stream()
