@@ -61,7 +61,7 @@ public class AsyncDocxCheckerServiceImpl implements DocxCheckerService {
                 for (var checker : checkers) {
                     if (!checker.supports(bodyElement)) continue;
 
-                    int finalI = i;
+                    final int finalI = i;
                     tasks.add(() -> {
                         finalContext.setCurrentElementIndex(finalI);
                         try {
