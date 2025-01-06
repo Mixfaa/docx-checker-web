@@ -10,10 +10,6 @@ import java.util.List;
 public interface ErrorsCollector {
     void addError(ErrorTemplate error);
 
-    default void addError(String errorTemplateCode, Object... args) {
-        addError(new ErrorTemplate(errorTemplateCode, args));
-    }
-
     Collection<ErrorTemplate> getErrors();
 
     class ListErrorsCollector implements ErrorsCollector {

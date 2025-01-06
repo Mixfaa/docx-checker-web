@@ -2,6 +2,7 @@ package com.mixfa.docx_checker_web.docxchecker.checker;
 
 import com.mixfa.docx_checker_web.docxchecker.DocxCheckingContext;
 import com.mixfa.docx_checker_web.docxchecker.DocxElementChecker;
+import com.mixfa.docx_checker_web.docxchecker.ErrorTemplates;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFStyle;
@@ -15,10 +16,7 @@ import java.math.BigInteger;
 
 @Component
 public class NormalStyleChecker implements DocxElementChecker.DocumentChecker {
-    private static final String NO_NORMAL_STYLE = "nonormalstyle";
-    private static final String WRONG_FONT = "wrongfont";
-    private static final String WRONG_SPACING = "wrongspacing";
-    private static final String WRONG_FIRST_LINE_INDENT = "wrongindent";
+
 
     @Override
     public void checkElement(XWPFDocument document, DocxCheckingContext context) {
@@ -26,7 +24,7 @@ public class NormalStyleChecker implements DocxElementChecker.DocumentChecker {
         XWPFStyle style = document.getStyles().getStyle("Normal");
 
         if (style == null) {
-            errorsCollector.addError(NO_NORMAL_STYLE);
+            errorsCollector.addError(ErrorTemplates.noNormalStyle());
             return;
         }
 
@@ -39,7 +37,7 @@ public class NormalStyleChecker implements DocxElementChecker.DocumentChecker {
         String fontName = fonts.getAscii();
 
         if (!StringUtils.equals(fontName, "Times New Roman"))
-            errorsCollector.addError(WRONG_FONT);
+            errorsCollector.addError(ErrorTemplates.wrongFont());
 
         // Line spacing
         int lineSpacingType = spacing.getLineRule().intValue();
@@ -51,11 +49,11 @@ public class NormalStyleChecker implements DocxElementChecker.DocumentChecker {
         // Check if the style matches the expected values
         boolean isSpacingCorrect = lineSpacingType == 1 && lineSpacing == 18; // 1.5 line spacing in twips
         if (!isSpacingCorrect)
-            errorsCollector.addError(WRONG_SPACING);
+            errorsCollector.addError(ErrorTemplates.wrongSpacing());
 
         boolean isFirstLineIndentCorrect = firstLineIndent == 35; // 1.25 cm in twips
         if (!isFirstLineIndentCorrect)
-            errorsCollector.addError(WRONG_FIRST_LINE_INDENT);
+            errorsCollector.addError(ErrorTemplates.wrongFirstLineIndent());
 
     }
 }

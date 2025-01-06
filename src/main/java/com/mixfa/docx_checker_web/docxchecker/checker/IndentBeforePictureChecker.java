@@ -3,6 +3,7 @@ package com.mixfa.docx_checker_web.docxchecker.checker;
 
 import com.mixfa.docx_checker_web.docxchecker.DocxCheckingContext;
 import com.mixfa.docx_checker_web.docxchecker.DocxElementChecker;
+import com.mixfa.docx_checker_web.docxchecker.ErrorTemplates;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.apache.poi.xwpf.usermodel.XWPFRun;
@@ -12,7 +13,6 @@ import java.util.List;
 
 @Component
 public class IndentBeforePictureChecker implements DocxElementChecker.ParagraphChecker {
-    private static final String NONL_BEFORE_PICTURE = "nonewlinebeforepicture";
 
     @Override
     public void checkElement(XWPFParagraph paragraph, DocxCheckingContext context) {
@@ -29,7 +29,7 @@ public class IndentBeforePictureChecker implements DocxElementChecker.ParagraphC
             var previousElement = elements.get(currentIndex - 1);
             if (previousElement instanceof XWPFParagraph previousParagraph) {
                 boolean isNewLineBeforePicture = isNewLineBeforePicture(previousParagraph);
-                if (!isNewLineBeforePicture) errorsCollector.addError(NONL_BEFORE_PICTURE);
+                if (!isNewLineBeforePicture) errorsCollector.addError(ErrorTemplates.noNewLineBeforePicture());
             }
         }
     }

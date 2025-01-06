@@ -2,6 +2,7 @@ package com.mixfa.docx_checker_web.docxchecker.checker;
 
 import com.mixfa.docx_checker_web.docxchecker.DocxCheckingContext;
 import com.mixfa.docx_checker_web.docxchecker.DocxElementChecker;
+import com.mixfa.docx_checker_web.docxchecker.ErrorTemplates;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.springframework.stereotype.Component;
@@ -13,7 +14,6 @@ import java.util.Map;
 @Component
 public class RequiredHeadersChecker implements DocxElementChecker.DocumentChecker {
     private static final String HEADER_STYLE = "Headerofreportpart";
-    private static final String REQUIRED_HEADER_NOT_FOUND = "reqheadernotfound";
     private static final Map<String, Boolean> REQUIRED_HEADERS = Map.of("ЗМІСТ", false, "ВСТУП", false);
 
     @Override
@@ -30,7 +30,7 @@ public class RequiredHeadersChecker implements DocxElementChecker.DocumentChecke
 
         headersCounter.forEach((header, used) -> {
             if (used) return;
-            errorsCollector.addError(REQUIRED_HEADER_NOT_FOUND, header);
+            errorsCollector.addError(ErrorTemplates.requiredHeaderNotFound(header));
         });
     }
 }

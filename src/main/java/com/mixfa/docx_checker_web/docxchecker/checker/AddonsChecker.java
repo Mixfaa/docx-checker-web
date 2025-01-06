@@ -2,6 +2,8 @@ package com.mixfa.docx_checker_web.docxchecker.checker;
 
 import com.mixfa.docx_checker_web.docxchecker.DocxCheckingContext;
 import com.mixfa.docx_checker_web.docxchecker.DocxElementChecker;
+import com.mixfa.docx_checker_web.docxchecker.ErrorTemplates;
+import com.mixfa.docx_checker_web.docxchecker.model.ErrorTemplate;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.util.StringUtils;
@@ -16,8 +18,7 @@ public class AddonsChecker implements DocxElementChecker<XWPFParagraph> {
 
     private static final List<String> ADDON_STYLES = List.of("Heading1", "1", "Heading1,1_Topic");
 
-    private static final String ADDON_TITLE_NOT_MATCHES = "addontitleinvalid";
-    private static final String ADDON_STYLE_NOT_MATCHES = "addonstyleinvalid";
+
 
     @Override
     public void checkElement(XWPFParagraph paragraph, DocxCheckingContext context) {
@@ -26,11 +27,11 @@ public class AddonsChecker implements DocxElementChecker<XWPFParagraph> {
         if (!paragraphTextLC.startsWith("додаток")) return;
 
         var errorsCollector = context.errorsCollector();
-        if (!ADDON_CHAR_PATTERN.test(paragraphText)) errorsCollector.addError(ADDON_TITLE_NOT_MATCHES, paragraphText);
+        if (!ADDON_CHAR_PATTERN.test(paragraphText)) errorsCollector.addError(ErrorTemplates.addonTitleInvalid(paragraphText));
 
         var paragraphStyle = paragraph.getStyle();
         var styleMatches = ADDON_STYLES.stream().anyMatch((style) -> StringUtils.equals(style, paragraphStyle));
-        if (!styleMatches) errorsCollector.addError(ADDON_STYLE_NOT_MATCHES);
+        if (!styleMatches) errorsCollector.addError(ErrorTemplates.addonStyleNotMatches());
     }
 
     @Override

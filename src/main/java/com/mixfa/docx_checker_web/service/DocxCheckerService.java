@@ -2,6 +2,7 @@ package com.mixfa.docx_checker_web.service;
 
 import com.mixfa.docx_checker_web.docxchecker.DocxCheckingContext;
 import com.mixfa.docx_checker_web.docxchecker.DocxElementChecker;
+import com.mixfa.docx_checker_web.docxchecker.ErrorTemplates;
 import com.mixfa.docx_checker_web.docxchecker.ErrorsCollector;
 import com.mixfa.docx_checker_web.docxchecker.model.ErrorTemplate;
 import org.apache.poi.xwpf.usermodel.IBodyElement;

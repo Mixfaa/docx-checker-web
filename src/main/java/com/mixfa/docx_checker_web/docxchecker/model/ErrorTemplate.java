@@ -12,6 +12,14 @@ public record ErrorTemplate(
     final static String RESOURCE_NAME = "errors-resource";
     final static ResourceBundle DEFAULT_RESOURCE_BUNDLE = ResourceBundle.getBundle(RESOURCE_NAME, defaultLocale);
 
+    public ErrorTemplate(String templateCode) {
+        this(templateCode, null);
+    }
+
+    public static ErrorTemplate createWithVararg(String templateCode, Object ... args) {
+        return new ErrorTemplate(templateCode, args);
+    }
+
     public String formatError(Locale locale) {
         locale = Objects.requireNonNullElse(locale, defaultLocale);
         if (locale.equals(defaultLocale))
@@ -26,6 +34,7 @@ public record ErrorTemplate(
             resourceBundle = DEFAULT_RESOURCE_BUNDLE;
         }
 
-        return resourceBundle.getString(templateCode).formatted(args);
+        var templateString = resourceBundle.getString(templateCode);
+        return args == null ? templateString : templateString.formatted(args);
     }
 }
