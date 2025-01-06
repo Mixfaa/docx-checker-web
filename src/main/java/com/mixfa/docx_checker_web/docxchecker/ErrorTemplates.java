@@ -6,6 +6,7 @@ import lombok.experimental.Accessors;
 
 @Accessors(fluent = true)
 public class ErrorTemplates {
+    private ErrorTemplates() {}
     private static final String NO_TABLE_NUM_BEFORE_TABLE = "notablenum";
     private static final String TABLE_NUM_PATTERN_ERR = "tablenumpatternerr";
     private static final String NONL_BEFORE_TABLE_NUM = "nonewlinebeforetablenum";
