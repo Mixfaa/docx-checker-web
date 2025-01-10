@@ -33,7 +33,7 @@ public class AsyncDocxCheckerServiceImpl implements DocxCheckerService {
     @Override
     public Collection<ErrorTemplate> checkDocxFile(InputStream docxFile) {
         AsyncModifiableContext context = null;
-        List<Callable<Void>> tasks = new ArrayList<>();
+        List<Callable<Void>> tasks = new ArrayList<>(checkers.size());
         try (var document = new XWPFDocument(docxFile)) {
             context = new AsyncModifiableContext(
                     document,

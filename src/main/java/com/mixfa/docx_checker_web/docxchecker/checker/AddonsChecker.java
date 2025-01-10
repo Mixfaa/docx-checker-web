@@ -18,8 +18,6 @@ public class AddonsChecker implements DocxElementChecker<XWPFParagraph> {
 
     private static final List<String> ADDON_STYLES = List.of("Heading1", "1", "Heading1,1_Topic");
 
-
-
     @Override
     public void checkElement(XWPFParagraph paragraph, DocxCheckingContext context) {
         var paragraphText = paragraph.getText();
