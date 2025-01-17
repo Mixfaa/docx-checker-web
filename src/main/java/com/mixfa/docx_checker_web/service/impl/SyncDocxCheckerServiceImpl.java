@@ -6,6 +6,7 @@ import com.mixfa.docx_checker_web.docxchecker.ErrorsCollector;
 import com.mixfa.docx_checker_web.docxchecker.ListErrorsCollector;
 import com.mixfa.docx_checker_web.docxchecker.model.ErrorTemplate;
 import com.mixfa.docx_checker_web.service.DocxCheckerService;
+import lombok.Setter;
 import org.apache.poi.xwpf.usermodel.IBodyElement;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.slf4j.Logger;
@@ -74,15 +75,12 @@ public class SyncDocxCheckerServiceImpl implements DocxCheckerService {
     private static class ModifiableContext implements DocxCheckingContext {
         private final XWPFDocument document;
         private final ErrorsCollector errorsCollector;
+        @Setter
         private int currentElementIndex = 0;
 
         public ModifiableContext(XWPFDocument document, ErrorsCollector errorsCollector) {
             this.document = document;
             this.errorsCollector = errorsCollector;
-        }
-
-        public void setCurrentElementIndex(int currentElementIndex) {
-            this.currentElementIndex = currentElementIndex;
         }
 
         @Override

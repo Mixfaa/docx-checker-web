@@ -1,6 +1,7 @@
 package com.mixfa.docx_checker_web.controller;
 
 import com.mixfa.docx_checker_web.docxchecker.DocxElementChecker;
+import com.mixfa.docx_checker_web.misc.Utils;
 import com.mixfa.docx_checker_web.service.DocxCheckerService;
 import com.mixfa.docx_checker_web.service.impl.SyncDocxCheckerServiceImpl;
 import org.springframework.stereotype.Controller;
@@ -12,7 +13,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.stream.Collectors;
 
 @Controller
 public class MainController {
@@ -36,22 +36,8 @@ public class MainController {
     @PostMapping("/check-file")
     public String checkDocxReport(@RequestParam MultipartFile file, @RequestParam String locale, Model model) {
         try {
-            var errors = docxCheckerService.checkDocxFile(file.getInputStream())
-                    .stream()
-                    .map(et -> et.formatError(Locale.forLanguageTag(locale)))
-                    .toList();
-            var errorsEnhanced = errors.stream()
-                    .collect(
-                            Collectors.toMap(
-                                    (k) -> k,
-                                    (v) -> errors.stream().filter(err -> err.equals(v)).count(),
-                                    Math::max
-                            )
-                    )
-                    .entrySet()
-                    .stream()
-                    .map(entry -> entry.getKey() + " x" + entry.getValue())
-                    .toList();
+            var errors = docxCheckerService.checkDocxFile(file.getInputStream());
+            var errorsEnhanced = Utils.makeUserFriendlyErrorMessages(errors, Locale.forLanguageTag(locale));
 
             model.addAttribute("errors", errorsEnhanced);
         } catch (Exception ex) {
