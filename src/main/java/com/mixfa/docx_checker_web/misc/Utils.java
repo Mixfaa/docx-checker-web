@@ -17,7 +17,6 @@ public class Utils {
         return BigInteger.valueOf(Math.round(sm * 567.0));
     }
 
-
     public static Map<ErrorTemplate, Long> countSimilarErrors(Collection<ErrorTemplate> errors) {
         return errors.stream()
                 .collect(
